@@ -98,41 +98,36 @@ function searchPlaces() {
     });
 }
 
-function renderPlaces(response) {
-  const $placesSection = $("SECTION.places").empty();
-  const articles = []
-  response.forEach(async (place) => {
-    const article = await createPlaceArticle(place);
-    articles.push(article);
-  });
-  $placesSection.append(articles.join(""));
-}
 
+function renderPlaces(response) {
+    const $placesSection = $("SECTION.places").empty();
+    response.forEach(async (place) => {
+      const article = await createPlaceArticle(place);
+      $placesSection.append(article);
+    });
+  }
 async function createPlaceArticle(place) {
-  let placeLength = await fetchReviews(place.id).done((data) => {
-    return data.length;
-  });
-  return `
-    <article>
-      <div class="title_box">
-        <h2>${place.name}</h2>
-        <div class="price_by_night">$${place.price_by_night}</div>
-      </div>
-      <div class="information">
-        <div class="max_guest">${place.max_guest} Guest(s)</div>
-        <div class="number_rooms">${place.number_rooms} Bedroom(s)</div>
-        <div class="number_bathrooms">${place.number_bathrooms} Bathroom(s)</div>
-      </div>
-      <div class="description">${place.description}</div>
-      <div class="reviews">
-        <h2>
-        <span id="${place.id}" class="toggle-reviews no-select">Show</span>
-          <span id="${place.id}n" class="treview">${placeLength} Reviews</span>
-        </h2>
-        <ul id="${place.id}r"></ul>
-      </div>
-    </article>`;
-}
+    let placeLength = await fetchReviews(place.id);
+    return `<article>
+        <div class="title_box">
+          <h2>${place.name}</h2>
+          <div class="price_by_night">$${place.price_by_night}</div>
+        </div>
+        <div class="information">
+          <div class="max_guest">${place.max_guest} Guest(s)</div>
+          <div class="number_rooms">${place.number_rooms} Bedroom(s)</div>
+          <div class="number_bathrooms">${place.number_bathrooms} Bathroom(s)</div>
+        </div>
+        <div class="description">${place.description}</div>
+        <div class="reviews">
+          <h2>
+          <span id="${place.id}" class="toggle-reviews no-select">Show</span>
+            <span id="${place.id}n" class="treview">${placeLength.length} Reviews</span>
+          </h2>
+          <ul id="${place.id}r"></ul>
+        </div>
+      </article>;`
+  }
 
 function showLoadingIndicator(show) {
   if (show) {
